@@ -1,0 +1,45 @@
+Creative Commons Attribution 4.0 International (CC BY 4.0)
+
+Copyright (c) 2026 Kyumin Kim and Matthew N. Reimer
+
+This replication package -- the code, the data, and the outputs -- is released
+under the Creative Commons Attribution 4.0 International licence.
+
+You are free to:
+  Share  -- copy and redistribute the material in any medium or format
+  Adapt  -- remix, transform, and build upon the material for any purpose,
+            including commercially
+
+Under the following terms:
+  Attribution -- You must give appropriate credit, provide a link to the licence,
+  and indicate if changes were made. You may do so in any reasonable manner, but
+  not in any way that suggests the licensors endorse you or your use.
+
+No additional restrictions -- You may not apply legal terms or technological
+measures that legally restrict others from doing anything the licence permits.
+
+Full licence text: https://creativecommons.org/licenses/by/4.0/legalcode
+
+-------------------------------------------------------------------------------
+A note on the raw data
+
+The four CSV files in data/raw/ are public records of the State of Alaska,
+redistributed here unmodified so that the package runs without any external
+download:
+
+  akfish-data-CFECpermits.csv
+      Alaska Commercial Fisheries Entry Commission, permit and landings records
+  employment-by-industry-community-and-year.csv
+  employment-summary-data-by-community-and-year.csv
+      Alaska Local and Regional Information (ALARI),
+      Alaska Department of Labor and Workforce Development
+  Total_pop.csv
+      Alaska Department of Labor and Workforce Development, population estimates
+
+If you reuse those files on their own, please cite the issuing agency.
+
+-------------------------------------------------------------------------------
+Citing this package
+
+  Kim, K. and Reimer, M. N. Replication package for "Diversification, Growth,
+  and Stability in Local Fishing Economies".
