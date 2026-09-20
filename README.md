@@ -11,7 +11,7 @@ RUN_BAYES=1 ./run_all.sh     # also runs the Bayesian check for Table S6 (about 
 STATA=/path/to/stata ./run_all.sh
 ```
 
-The script runs the Stata stage, then the R stage. Figures are written to `output/figures/`, LaTeX table bodies to `output/tables/`, and saved estimates to `output/estimates/`. To run Stata alone, change to the package root and run `do code/stata/00_master.do`.
+The package ships with only code and raw data; `data/derived/`, `output/` and `logs/` are empty until you run it. The script runs the Stata stage, then the R stage. Figures are written to `output/figures/`, LaTeX table bodies to `output/tables/`, and saved estimates to `output/estimates/`. To run Stata alone, change to the package root and run `do code/stata/00_master.do`.
 
 ## 1. Requirements
 
@@ -56,7 +56,7 @@ Study period 2000–2016; estimation sample 177 communities.
 | Fig. 6 | `code/R/17_fig6_mrt_substitution.R` |
 | Fig. S1 | `code/R/10_figS1_diversification_trend.R` |
 
-The manuscript in `paper/` reads its figures from `output/figures/` and its tables from `output/tables/`.
+The manuscript in `paper/` reads its figures from `output/figures/` and its tables from `output/tables/`, so run the package before compiling it.
 
 ## 4. Structure
 
