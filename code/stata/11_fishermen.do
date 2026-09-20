@@ -1,24 +1,15 @@
 *-------------------------------------------------------------------------------
-* Filename:     11_fishermen.do
-* Purpose:      Average number of permit-holding fishermen per community.
-* Inputs:       $RAW/akfish-data-CFECpermits.csv
-* Outputs:      $DERIVED/fishermen.dta
-* Requires:     Stata 17+, config/paths.do already included by 00_master.do
-* Author:       Kim
-*               Ported for the replication package 2026; ONLY paths and this
-*               header were changed. Estimation logic is byte-for-byte original
-*               except where a line is marked RESTORED / ADDED.
+* 11_fishermen.do: Average number of permit-holding fishermen per community.
+* Inputs:  $RAW/akfish-data-CFECpermits.csv
+* Outputs: $DERIVED/fishermen.dta
 *-------------------------------------------------------------------------------
 version 17
 set more off
 
-*************************************************************
 **      Number of fishermen ****
-*************************************************************
 
 clear
 set more off
-* NOTE: original `global inpath ...` removed; paths come from config/paths.do
 
 * Load raw data*
 insheet using "$RAW/akfish-data-CFECpermits.csv", comma clear
@@ -26,19 +17,19 @@ insheet using "$RAW/akfish-data-CFECpermits.csv", comma clear
 * Removal for fishery having ZZ-TOT and "00" census code *
 drop if census_num=="00_AK" | census_num=="00_CA" | census_num=="00_OR"|census_num=="00_Oth" | census_num=="00_WA" |census_num=="00_ALL"
 
-* Only leave total values 
+* Only leave total values
 drop if fishery!="ZZ-TOT"
 
-*Borough adjustment needed since some cities' borough has been changed over time. 
+*Borough adjustment needed since some cities' borough has been changed over time.
 replace census_area = "HOONAH-ANGOON CA" if census_area == "SKAGWAY-HOONAH-ANGOON CA"
 replace census_area = "KUSILVAK CENSUS AREA" if census_area == "WADE HAMPTON CA"
 replace census_area = "PRINCE OF WALES-HYDER CA" if census_area == "PR OF WALES-OUTER KTKN CA"
 replace census_area = "PETERSBURG CA" if census_area == "WRANGELL-PETERSBURG CA"
 
-replace census_area = "HOONAH-ANGOON CA" if city == "Skagway" // Historically,  Skagway has bee in Hoonah census area for a long time. 
+replace census_area = "HOONAH-ANGOON CA" if city == "Skagway" // Historically,  Skagway has bee in Hoonah census area for a long time.
 replace census_area = "PETERSBURG CA" if city == "Wrangell" // For the same reason.
 
-* Changing the name of city that have different names from that of local economies dataset. 
+* Changing the name of city that have different names from that of local economies dataset.
 replace city = "Circle" if city == "Circle City"
 replace city = "Manley Hot Springs" if city == "Manley Hot Spring"
 replace city = "Saint Mary's" if city == "Saint Marys"
@@ -83,18 +74,14 @@ label variable permit_excl "Number of permits excl confidential data "
 egen city_id=group(city), label
 egen census_id=group(census_area), label
 
-
 drop if year<2000 | year>2016
 
-***************** Covariate of each fishing communities **********
+* Covariate of each fishing communities
 
 collapse (mean) avg_fishermen=fishermen, by (city)
 
-* Normalization. 
+* Normalization.
 
 label variable avg_fishermen "Average Number of fishermen"
 
-save "$DERIVED/fishermen.dta", replace 
-
-******************************
-
+save "$DERIVED/fishermen.dta", replace

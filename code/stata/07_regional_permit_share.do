@@ -1,44 +1,35 @@
 *-------------------------------------------------------------------------------
-* Filename:     07_regional_permit_share.do
-* Purpose:      Community fishing-permit share within its region.
-* Inputs:       $RAW/akfish-data-CFECpermits.csv
-* Outputs:      $DERIVED/regional_permit_share_max.dta
-* Requires:     Stata 17+, config/paths.do already included by 00_master.do
-* Author:       Kim
-*               Ported for the replication package 2026; ONLY paths and this
-*               header were changed. Estimation logic is byte-for-byte original
-*               except where a line is marked RESTORED / ADDED.
+* 07_regional_permit_share.do: Community fishing-permit share within its region.
+* Inputs:  $RAW/akfish-data-CFECpermits.csv
+* Outputs: $DERIVED/regional_permit_share_max.dta
 *-------------------------------------------------------------------------------
 version 17
 set more off
 
-******* (Spatial) concentration of Share of permit *******
-************
+* (Spatial) concentration of Share of permit
 clear
 set more off
-* NOTE: original `global inpath ...` removed; paths come from config/paths.do
 
 * Load raw data*
 insheet using "$RAW/akfish-data-CFECpermits.csv", comma clear
 
-
 * Removal for fishery having ZZ-TOT and "00" census code *
 drop if census_num=="00_AK" | census_num=="00_CA" | census_num=="00_OR"|census_num=="00_Oth" | census_num=="00_WA" |census_num=="00_ALL"
 
-* Only leave total values for each community 
+* Only leave total values for each community
 drop if fishery!="ZZ-TOT"
 drop if city=="All Cities"
 
-*Borough adjustment needed since some cities' borough has been changed over time. 
+*Borough adjustment needed since some cities' borough has been changed over time.
 replace census_area = "HOONAH-ANGOON CA" if census_area == "SKAGWAY-HOONAH-ANGOON CA"
 replace census_area = "KUSILVAK CENSUS AREA" if census_area == "WADE HAMPTON CA"
 replace census_area = "PRINCE OF WALES-HYDER CA" if census_area == "PR OF WALES-OUTER KTKN CA"
 replace census_area = "PETERSBURG CA" if census_area == "WRANGELL-PETERSBURG CA"
 
-replace census_area = "HOONAH-ANGOON CA" if city == "Skagway" // Historically,  Skagway has bee in Hoonah census area for a long time. 
+replace census_area = "HOONAH-ANGOON CA" if city == "Skagway" // Historically,  Skagway has bee in Hoonah census area for a long time.
 replace census_area = "PETERSBURG CA" if city == "Wrangell" // For the same reason.
 
-* Changing the name of city that have different names from that of local economies dataset. 
+* Changing the name of city that have different names from that of local economies dataset.
 replace city = "Circle" if city == "Circle City"
 replace city = "Manley Hot Springs" if city == "Manley Hot Spring"
 replace city = "Saint Mary's" if city == "Saint Marys"
@@ -50,12 +41,9 @@ replace city = "Sutton-Alpine" if city == "Sutton"
 replace city = "Saint Paul" if city == "Saint Paul Island"
 replace city = "Clark's Point" if city == "Clarks Point"
 
-
-
-*drop to make sure that each city at least has some amount of observations 
+*drop to make sure that each city at least has some amount of observations
 drop if year<2000
 drop if year>2016
-
 
 *Only leave "All Fisheries Combined"
 drop if fishery_grp!="All Fisheries Combined"
@@ -78,23 +66,20 @@ label variable ppl_excl "Total permits excl confidential data"
 label variable fishery_desc "Fishery Description "
 label variable permit_excl "Number of permits excl confidential data "
 
-
 *Create "city" id variable: "city_id".
 egen city_id=group(city), label
 
-
 keep city year census_area fished
 
-*No fishing activity years are droped 
-drop if fished==0 
+*No fishing activity years are droped
+drop if fished==0
 
-* For missing data that doesn't 
+* For missing data that doesn't
 bysort city: gen count = _N
 drop if count < 7
 
-
-**Compute braoder regional fisheries revenue share 
-**Compute braoder regional fisheries revenue share 
+**Compute braoder regional fisheries revenue share
+**Compute braoder regional fisheries revenue share
 encode census_area, generate(census_id) /*Census area is borough*/
 save "$DERIVED/temp.dta", replace
 
@@ -115,10 +100,9 @@ label variable broader_permit_share "Average share of fishing permits within bor
 
 collapse (mean) broader_permit_share = broader_permit_share, by(city)
 
-* get rid of obs that didn't do active fishing permt even though they have permit issued. 
+* get rid of obs that didn't do active fishing permt even though they have permit issued.
 drop if broader_permit_share==0
 
 save "$DERIVED/regional_permit_share_max.dta", replace
 
-**** Why different with diversification's city observatiuons: Some cities are having permit-issued but do not fish during some periods. THis one treats them as 0. 
-****
+* Unlike the diversification measures, communities that hold permits but do not fish in a period enter with zero

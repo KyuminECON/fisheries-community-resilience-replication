@@ -1,32 +1,22 @@
 *-------------------------------------------------------------------------------
-* Filename:     32_panel_population.do
-* Purpose:      Two-period panel: average population.
-* Inputs:       $RAW/Total_pop.csv
-* Outputs:      $DERIVED/avg_pop_panel_twoperiod.dta
-* Requires:     Stata 17+, config/paths.do already included by 00_master.do
-* Author:       Kim
-*               Ported for the replication package 2026; ONLY paths and this
-*               header were changed. Estimation logic is byte-for-byte original
-*               except where a line is marked RESTORED / ADDED.
+* 32_panel_population.do: Two-period panel: average population.
+* Inputs:  $RAW/Total_pop.csv
+* Outputs: $DERIVED/avg_pop_panel_twoperiod.dta
 *-------------------------------------------------------------------------------
 version 17
 set more off
 
-***************************************************************************************** 
-********************** Local Economies diversification **********************************
-************************* Kyumin Kim and Matthew Reimer *********************************
-************************** Twp-period panel data creation for population **************
-*****************************************************************************************
+* Local Economies diversification
+* Twp-period panel data creation for population
 clear
 set more off
-* NOTE: original `global inpath ...` removed; paths come from config/paths.do
 
 * Load the population data
-insheet using "$RAW/Total_pop.csv", comma clear 
+insheet using "$RAW/Total_pop.csv", comma clear
 
 * Normalize city names for consistent merging
-replace place_name = subinstr(place_name, " CDP, Alaska", "",.) 
-replace place_name = subinstr(place_name, " city, Alaska", "",.) 
+replace place_name = subinstr(place_name, " CDP, Alaska", "",.)
+replace place_name = subinstr(place_name, " city, Alaska", "",.)
 replace place_name = subinstr(place_name, " Alaska", "",.)
 drop if place_name=="NA"
 
@@ -48,7 +38,7 @@ program define create_avg_pop
     preserve
     keep if year >= `startyear' & year <= `endyear'
     collapse (mean) avg_pop=total_pop, by(place_name)
-    rename place_name city 
+    rename place_name city
     label variable avg_pop "Average Population(`startyear'-`endyear')"
     gen period = `labelname'  // Label the dataset with a period identifier
     save "$DERIVED/avg_pop_period`labelname'.dta", replace
@@ -61,10 +51,8 @@ create_avg_pop "1" 2000 2008
 * Calculate for period2
 create_avg_pop "2" 2009 2016
 
-
 * Merge the datasets into one panel dataset
 use "$DERIVED/avg_pop_period1.dta", clear
 append using "$DERIVED/avg_pop_period2.dta"
 
 save "$DERIVED/avg_pop_panel_twoperiod.dta", replace
-

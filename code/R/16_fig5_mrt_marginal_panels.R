@@ -1,28 +1,9 @@
-#-------------------------------------------------------------------------------
-# Filename:     16_fig5_mrt_marginal_panels.R
-# Purpose:      Fig. 5: marginal effect of each diversification margin on the MRT, the other margin held at its median, across the 5th-95th percentile grid.
-# Inputs:       $ESTIMATES/MRT_emp_fish_5-95.dta
-# Outputs:      $FIGURES/fig05_mrt_marginal_panels.png
-# Requires:     config/paths.R; see renv.lock. Needs the Stata stage to have run.
-# Author:       Matthew N. Reimer, supplied 2026-09-18.
-#               Ported for the replication package: ONLY the here() path calls and
-#               the output filename were changed. The figure code is Matt's.
-#-------------------------------------------------------------------------------
-# Filename: figure-MRT-marginal-panels.R
-# Purpose:  Marginal effect of each form of diversification on the MRT, holding the other margin fixed at its median.
-# Input:    MRT_emp_fish_5-95.dta
-#           A 19x19 grid of MRT estimates as sectoral diversification (q1) and fisheries diversification (q2) both vary.
-# Output:   fig-MRT-marginal-panels.png
-# Notes:    Column `parm` encodes the grid coordinates as "NMRT_<q1>_<q2>".
+# 16_fig5_mrt_marginal_panels.R: Fig. 5, marginal effect of each diversification margin on the MRT (other margin at its median).
+# Inputs:  $ESTIMATES/MRT_emp_fish_5-95.dta (grid of MRT estimates; `parm` = "NMRT_<sectoral pctl>_<fisheries pctl>")
+# Outputs: $FIGURES/fig05_mrt_marginal_panels.png
 
-# PRELIMINARIES ----
-rm(list=ls())
-
-source(file.path(Sys.getenv("REPLICATION_ROOT", unset = here::here()), "config", "paths.R"))
-## Set Path
-# here::i_am() removed: the package root comes from config/paths.R
-## Packages
-pacman::p_load(here,data.table,tidyverse,patchwork,haven,isoband)
+source(here::here("code", "R", "setup.R"))
+library(patchwork)
 
 # ---- Load and reshape ----
 DT <- read_dta(file.path(ESTIMATES, "MRT_emp_fish_5-95.dta"))

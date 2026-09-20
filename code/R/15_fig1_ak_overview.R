@@ -1,42 +1,19 @@
-#-------------------------------------------------------------------------------
-# Filename:     15_fig1_ak_overview.R
-# Purpose:      Fig. 1: two-by-two data overview -- maps of sectoral diversification and of employment growth, each paired with its scatter.
-# Inputs:       $DERIVED/df_plot.dta
-# Outputs:      $FIGURES/fig01_ak_overview.png
-# Requires:     config/paths.R; see renv.lock. Needs the Stata stage to have run.
-# Author:       Matthew N. Reimer, supplied 2026-09-18.
-#               Ported for the replication package: ONLY the here() path calls and
-#               the output filename were changed. The figure code is Matt's.
-#-------------------------------------------------------------------------------
-# Filename: figure-AK-overview-combined.R
-# Purpose:  Combines the two "overview" figures (diversification; growth &
-#           instability) into one 2x2 figure: each row is a theme (map + scatter),
-#           so the figure reads as one data-overview panel.
-#             a: Alaska map, colored by Sectoral diversification,
-#                sized by fisheries diversification
-#             b: scatter of Sectoral vs. fisheries diversification,
-#                colored by growth, sized by instability
-#             c: Alaska map, colored by employment growth, sized by instability
-#             d: scatter of instability vs. growth, colored by Sectoral
-#                diversification, sized by fisheries diversification
-#
-# Input:    df_plot.dta - one row per community, with diversification, growth,
-#           instability, and lon/lat columns.
-#
-# Output:   fig-AK-overview-combined.png
-#
-# PRELIMINARIES ----
-rm(list=ls())
+# 15_fig1_ak_overview.R: Fig. 1, data overview. Maps and scatters of diversification, employment growth and instability.
+#   a: map, colored by sectoral diversification, sized by fisheries diversification
+#   b: scatter of sectoral vs. fisheries diversification, colored by growth, sized by instability
+#   c: map, colored by employment growth, sized by instability
+#   d: scatter of instability vs. growth, colored by sectoral diversification, sized by fisheries diversification
+# Inputs:  $DERIVED/estimation_sample.dta
+# Outputs: $FIGURES/fig01_ak_overview.png
 
-source(file.path(Sys.getenv("REPLICATION_ROOT", unset = here::here()), "config", "paths.R"))
-## Set Path
-# here::i_am() removed: the package root comes from config/paths.R
-## Packages
-pacman::p_load(here,data.table,tidyverse,sf,patchwork,haven,viridis,patchwork)
+source(here::here("code", "R", "setup.R"))
+library(sf)
+library(patchwork)
+library(viridis)
 
 # ---- Load data and geometry ----
 
-dta <- read_dta(file.path(DERIVED, "df_plot.dta"))
+dta <- read_dta(file.path(DERIVED, "estimation_sample.dta"))
 
 data("states50", package = "rnaturalearthdata")
 usa <- st_as_sf(states50)
@@ -137,16 +114,13 @@ p_scatter_gi <- make_scatter(
 
 # ---- Combine and export ----
 
-# Row 1 = diversification theme (map, scatter); Row 2 = growth/instability
-# theme (map, scatter). 
+# Row 1: diversification (map, scatter); row 2: growth and instability (map, scatter)
 
 combined <- (p_map_div + p_scatter_div) / (p_map_gi + p_scatter_gi) +
   plot_annotation(
     tag_levels = "a",
     theme = theme(plot.tag = element_text(family = "serif", face = "bold", size = 14))
   )
-
-print(combined)
 
 ggsave(
   file.path(FIGURES, "fig01_ak_overview.png"),

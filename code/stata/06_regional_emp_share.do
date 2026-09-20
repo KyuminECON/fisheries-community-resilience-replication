@@ -1,27 +1,15 @@
 *-------------------------------------------------------------------------------
-* Filename:     06_regional_emp_share.do
-* Purpose:      Community employment share within its shared borough.
-* Inputs:       $RAW/employment-by-industry-community-and-year.csv
-* Outputs:      $DERIVED/regional_emp_share.dta
-* Requires:     Stata 17+, config/paths.do already included by 00_master.do
-* Author:       Kim
-*               Ported for the replication package 2026; ONLY paths and this
-*               header were changed. Estimation logic is byte-for-byte original
-*               except where a line is marked RESTORED / ADDED.
+* 06_regional_emp_share.do: Community employment share within its shared borough.
+* Inputs:  $RAW/employment-by-industry-community-and-year.csv
+* Outputs: $DERIVED/regional_emp_share.dta
 *-------------------------------------------------------------------------------
 version 17
 set more off
 
-****************************************
-******** Kyumin Kim and Matt Reimer*****
-*******Broader employment Share ********
-****************************************
-**************10/16 version ************
-****************************************
+* Broader employment Share
 
 clear
 set more off
-* NOTE: original `global inpath ...` removed; paths come from config/paths.do
 
 * Load the dataset
 insheet using "$RAW/employment-by-industry-community-and-year.csv", comma clear
@@ -60,5 +48,3 @@ collapse (mean) broader_emp_share=broader_emp_share,by(city census_id community_
 
 * Save the dataset with the new variable
 save "$DERIVED/regional_emp_share.dta", replace
-
-

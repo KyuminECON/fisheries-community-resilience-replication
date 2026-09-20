@@ -1,32 +1,20 @@
 *-------------------------------------------------------------------------------
-* Filename:     30_panel_growth_instability.do
-* Purpose:      Two-period panel: employment growth and instability by period.
-* Inputs:       $RAW/employment-by-industry-community-and-year.csv
-* Outputs:      $DERIVED/growth_and_instability_emp_reg_period*.dta
-* Requires:     Stata 17+, config/paths.do already included by 00_master.do
-* Author:       Kim
-*               Ported for the replication package 2026; ONLY paths and this
-*               header were changed. Estimation logic is byte-for-byte original
-*               except where a line is marked RESTORED / ADDED.
+* 30_panel_growth_instability.do: Two-period panel: employment growth and instability by period.
+* Inputs:  $RAW/employment-by-industry-community-and-year.csv
+* Outputs: $DERIVED/growth_and_instability_emp_reg_period*.dta
 *-------------------------------------------------------------------------------
 version 17
 set more off
 
-***************************************************************************************** 
-***************************** Local Economy Dataset Preperation *************************
-************************* Kyumin Kim and Matthew Reimer *********************************
-******************************** 2023_10_15 version**************************************
-*****************************************************************************************
-
+* Local economy dataset
 
 clear
 set more off
-* NOTE: original `global inpath ...` removed; paths come from config/paths.do
 
 *Load a raw data* -- this dataset has up-to-date available data (from 2014 -> 2016)
 insheet using "$RAW/employment-by-industry-community-and-year.csv", comma clear
 
-*Rename Commuinty_name -> "city", "periodyear" ->"year" since fisheries data uses "city" and "year" for community id and time and for my convinience
+* Rename to the community and year keys used in the fisheries data
 rename community__name city
 rename periodyear year
 rename industry__name industry
@@ -36,29 +24,25 @@ rename emp employment
 egen city_id =group(city)
 
 *Generate industy
-egen industry_id = group(industry) 
+egen industry_id = group(industry)
 
-*Generate an unique ID to set two-dimensional panel: The original data is 3-dimensinal.   
+* Unique ID for the two-dimensional panel
 sort year, stable
 gen city_industry=city+"-"+industry
 egen city_industry_id=group(city_industry), label
 
-
 *Save file
 save "$DERIVED/temp.dta",replace
 
+* Growth and instability compute for employment  (Equation (9) in Kluge (2018)
 
-******* Growth and instability compute for employment  (Equation (9) in Kluge (2018)  *****
-
-
-* Construct panel structure: This is necessary since we need to use first-difference to create "Change in employment" variable* 
+* Construct panel structure: This is necessary since we need to use first-difference to create "Change in employment" variable*
 xtset city_industry_id year
-isid city_industry_id year 
+isid city_industry_id year
 
+*1) Growth rate, "mu" computation  (unbalanced panel; growth is not log-approximated)
 
-*1) Growth rate, "mu" computation  (The original data is imbalanced panel. DO NOT USE log approximation for growth computation.)
-
-collapse (sum) sum_employment_city_year=employment, by(year city) /*sum employment over industry*/
+collapse (sum) sum_employment_city_year=employment, by(year city)
 label variable sum_employment_city_year "Sum of employement of each year and city"
 rename sum_employment_city_year employment
 
@@ -67,12 +51,11 @@ xtset city_id year
 
 gen ln_employment = log(employment)
 
-save "$DERIVED/temp.dta",replace 
+save "$DERIVED/temp.dta",replace
 
-***************** Regression-Based Computation *****************************
+* Regression-Based Computation
 
 clear
-* NOTE: original `global inpath ...` removed; paths come from config/paths.do
 
 * Define a structure for the cumulative results dataset with the same variables as your final dataset
 set obs 1
@@ -98,7 +81,6 @@ use "$DERIVED/temp.dta", clear
 * Ensure the dataset is sorted appropriately
 sort city_id year
 
-
 * Creating variables to hold the results
 gen mu_emp_reg = .
 gen sigma_emp_reg = .
@@ -122,42 +104,41 @@ forvalues i = 1/`num_cities' {
 
     * Select the data for one city at a time
     qui keep if city_id == `i'
-    
+
     * Check if there are enough observations
-    if _N > 4 {  
+    if _N > 4 {
         * Create a log of employment if it doesn't exist
-        
+
         * Regression of ln_employment on normalized time trend to get beta_1
         qui regress ln_employment time_trend
-        
+
         * Store the exponentiated beta_1 (growth rate) for the city
         scalar growth_i = exp(_b[time_trend]) - 1
-        
+
         * Calculate and store the standard deviation of residuals
         qui predict residuals, residuals
         summarize residuals, detail
         scalar sd_resid_i = r(sd)
-        
+
         * Assign the computed values back to the original data
         qui replace mu_emp_reg = growth_i
         qui replace sigma_emp_reg = sd_resid_i
 
         * Save results for this city only
         save "$DERIVED/city_results.dta", replace
-        
+
         * Append to cumulative file
         qui use "$DERIVED/cumulative_results.dta", clear
         qui append using "$DERIVED/city_results.dta"
         qui save "$DERIVED/cumulative_results.dta", replace
     }
-    
+
     * Restore the full dataset
-    restore 
+    restore
 }
 
 * Load the final cumulative results
 use "$DERIVED/cumulative_results.dta", clear
-
 
 * Collapse the data to get one observation per city
 collapse (mean) mu_emp_reg (mean) sigma_emp_reg, by(city)
@@ -169,17 +150,13 @@ gen period=1
 * Save the collapsed dataset as a new file
 save "$DERIVED/growth_and_instability_emp_reg_period1.dta", replace
 
-
-///////////// Second period /.///////
-
-
+* Second period /.
 
 * Now load your main data to start the process
 use "$DERIVED/temp.dta", clear
 
 * Ensure the dataset is sorted appropriately
 sort city_id year
-
 
 * Creating variables to hold the results
 gen mu_emp_reg = .
@@ -204,42 +181,41 @@ forvalues i = 1/`num_cities' {
 
     * Select the data for one city at a time
     qui keep if city_id == `i'
-    
+
     * Check if there are enough observations
-    if _N > 4 {  
+    if _N > 4 {
         * Create a log of employment if it doesn't exist
-        
+
         * Regression of ln_employment on normalized time trend to get beta_1
         qui regress ln_employment time_trend
-        
+
         * Store the exponentiated beta_1 (growth rate) for the city
         scalar growth_i = exp(_b[time_trend]) - 1
-        
+
         * Calculate and store the standard deviation of residuals
         qui predict residuals, residuals
         summarize residuals, detail
         scalar sd_resid_i = r(sd)
-        
+
         * Assign the computed values back to the original data
         qui replace mu_emp_reg = growth_i
         qui replace sigma_emp_reg = sd_resid_i
 
         * Save results for this city only
         save "$DERIVED/city_results.dta", replace
-        
+
         * Append to cumulative file
         qui use "$DERIVED/cumulative_results.dta", clear
         qui append using "$DERIVED/city_results.dta"
         qui save "$DERIVED/cumulative_results.dta", replace
     }
-    
+
     * Restore the full dataset
-    restore 
+    restore
 }
 
 * Load the final cumulative results
 use "$DERIVED/cumulative_results.dta", clear
-
 
 * Collapse the data to get one observation per city
 collapse (mean) mu_emp_reg (mean) sigma_emp_reg, by(city)

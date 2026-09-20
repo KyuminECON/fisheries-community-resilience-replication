@@ -1,25 +1,14 @@
 *-------------------------------------------------------------------------------
-* Filename:     38_panel_build.do
-* Purpose:      Merge the two-period panel pieces into complete_panel_dataset.dta.
-* Inputs:       the $DERIVED panel pieces built by 30-37
-* Outputs:      $DERIVED/complete_panel_dataset.dta
-* Requires:     Stata 17+, config/paths.do already included by 00_master.do
-* Author:       Kim
-*               Ported for the replication package 2026; ONLY paths and this
-*               header were changed. Estimation logic is byte-for-byte original
-*               except where a line is marked RESTORED / ADDED.
+* 38_panel_build.do: Merge the two-period panel pieces into complete_panel_dataset.dta.
+* Inputs:  the $DERIVED panel pieces built by 30-37
+* Outputs: $DERIVED/complete_panel_dataset.dta
 *-------------------------------------------------------------------------------
 version 17
 set more off
 
-***************************************************************************
-********************* Panel Structure Synthesizing ************************
-***************************************************************************
+* Panel Structure Synthesizing
 
-
-
-clear 
-* NOTE: original `global inpath ...` removed; paths come from config/paths.do
+clear
 
 * Load Growth and Instability Data
 use "$DERIVED/growth_and_instability_emp_reg_panel_twoperiod.dta", clear
@@ -53,8 +42,7 @@ drop _merge
 merge m:1 city period using "$DERIVED/avg_fish_ratio_im_panel_twoperiod"
 drop _merge
 
-
-///////// need to drop variables. 
+* need to drop variables.
 
 * Additional calculations (if necessary) such as wage per capita, fishing revenue growth
 * Assuming the necessary data for these calculations are already in the merged dataset

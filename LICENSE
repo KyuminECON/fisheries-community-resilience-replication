@@ -1,45 +1,90 @@
-Creative Commons Attribution 4.0 International (CC BY 4.0)
+Replication package for "Diversification, Growth, and Stability in Local Fishing
+Economies", by Kyumin Kim and Matthew N. Reimer.
+
+This package has four parts, each under its own terms.
+
+===============================================================================
+1. Code -- MIT License
+===============================================================================
+Applies to: code/stata/, code/R/, code/ado/ehdf_prep.ado, config/, run_all.sh
 
 Copyright (c) 2026 Kyumin Kim and Matthew N. Reimer
 
-This replication package -- the code, the data, and the outputs -- is released
-under the Creative Commons Attribution 4.0 International licence.
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
 
-You are free to:
-  Share  -- copy and redistribute the material in any medium or format
-  Adapt  -- remix, transform, and build upon the material for any purpose,
-            including commercially
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-Under the following terms:
-  Attribution -- You must give appropriate credit, provide a link to the licence,
-  and indicate if changes were made. You may do so in any reasonable manner, but
-  not in any way that suggests the licensors endorse you or your use.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-No additional restrictions -- You may not apply legal terms or technological
-measures that legally restrict others from doing anything the licence permits.
+===============================================================================
+2. Outputs and manuscript -- CC BY 4.0
+===============================================================================
+Applies to: output/ (figures, tables, saved estimates), paper/sn-article.tex,
+README.md
 
-Full licence text: https://creativecommons.org/licenses/by/4.0/legalcode
+Copyright (c) 2026 Kyumin Kim and Matthew N. Reimer
 
--------------------------------------------------------------------------------
-A note on the raw data
+Licensed under the Creative Commons Attribution 4.0 International License.
+You may share and adapt this material for any purpose, including commercially,
+provided you give appropriate credit, link to the licence, and indicate if
+changes were made.
+Licence text: https://creativecommons.org/licenses/by/4.0/legalcode
 
-The four CSV files in data/raw/ are public records of the State of Alaska,
-redistributed here unmodified so that the package runs without any external
-download:
+The journal template files in paper/ (sn-jnl.cls, sn-nature.bst) and the
+bibliography database are not covered by this licence; they remain under their
+original terms.
+
+===============================================================================
+3. Data -- terms of the issuing agencies
+===============================================================================
+Applies to: data/raw/
+
+The four CSV files are public records of the State of Alaska, redistributed
+unmodified so that the package runs without an external download. They are not
+covered by the licences above. Their use is governed by the terms of the issuing
+agencies.
 
   akfish-data-CFECpermits.csv
-      Alaska Commercial Fisheries Entry Commission, permit and landings records
+      Alaska Commercial Fisheries Entry Commission, permit records
   employment-by-industry-community-and-year.csv
   employment-summary-data-by-community-and-year.csv
-      Alaska Local and Regional Information (ALARI),
-      Alaska Department of Labor and Workforce Development
+      Alaska Local and Regional Information (ALARI), Alaska Department of
+      Labor and Workforce Development
   Total_pop.csv
-      Alaska Department of Labor and Workforce Development, population estimates
+      Alaska Department of Labor and Workforce Development, population
+      estimates
 
-If you reuse those files on their own, please cite the issuing agency.
+If you reuse these files, cite the issuing agency.
 
--------------------------------------------------------------------------------
+===============================================================================
+4. Third-party software -- original authors' terms
+===============================================================================
+Applies to: code/ado/ (except ehdf_prep.ado)
+
+The following Stata packages are bundled unmodified for reproducibility. They
+are the work of their authors and are not covered by the licences above. See each
+file's header and help file, and the authors' distribution, for terms of use.
+
+  estout (estout, esttab, estadd, estpost)   Ben Jann
+  mat2txt                                    Michael Blasnik and Ben Jann
+  parmest (parmest, parmby, parmcip)         Roger Newson
+  sfcross                                    Federico Belotti, Silvio Daidone,
+                                             Giuseppe Ilardi and Vincenzo Atella
+                                             (Stata Journal 13(4), 2013)
+
+===============================================================================
 Citing this package
-
-  Kim, K. and Reimer, M. N. Replication package for "Diversification, Growth,
-  and Stability in Local Fishing Economies".
+===============================================================================
+Kim, K. and Reimer, M. N. Replication package for "Diversification, Growth,
+and Stability in Local Fishing Economies".

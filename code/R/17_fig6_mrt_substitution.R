@@ -1,37 +1,10 @@
-#-------------------------------------------------------------------------------
-# Filename:     17_fig6_mrt_substitution.R
-# Purpose:      Fig. 6: iso-MRT contours with the 3x3 quantile grid overlaid, beside the MRT point estimates with 95% CIs at each quantile combination.
-# Inputs:       $ESTIMATES/MRT_emp_fish_5-95.dta, $ESTIMATES/MRT_emp_fish.dta
-# Outputs:      $FIGURES/fig06_mrt_substitution.png
-# Requires:     config/paths.R; see renv.lock. Needs the Stata stage to have run.
-# Author:       Matthew N. Reimer, supplied 2026-09-18.
-#               Ported for the replication package: ONLY the here() path calls and
-#               the output filename were changed. The figure code is Matt's.
-#-------------------------------------------------------------------------------
-# Filename: figure-MRT-substitution-combined.R
-# Purpose:  Two-panel figure showing the substitution relationship between sectoral
-#           and fisheries diversification in shaping the growth-instability MRT.
-#             (a) Labeled iso-MRT contour lines, with the 3x3 quantile grid from 
-#             panel (b) overlaid as markers.
-#             (b) MRT point estimates at each sectoral x fisheries quantile
-#                 combination, with 95% CIs.
-#           Putting them side by side with matching color/shape coding lets a
-#           reader trace the same 9 points across both panels directly.
-#
-# Inputs:   MRT_emp_fish_5-95.dta   - full 19x19 percentile grid (for the contour)
-#           MRT_emp_fish.dta       - 3x3 quantile (25th/50th/75th) grid with CIs
-#                                     (for the point-range panel and the markers)
-#
-# Output:   fig-MRT-substitution-combined.png
+# 17_fig6_mrt_substitution.R: Fig. 6, iso-MRT contours (a) and MRT estimates with 95% CIs at the 3x3 quantile grid (b).
+# Inputs:  $ESTIMATES/MRT_emp_fish_5-95.dta, $ESTIMATES/MRT_emp_fish.dta
+# Outputs: $FIGURES/fig06_mrt_substitution.png
 
-# PRELIMINARIES ----
-rm(list=ls())
-
-source(file.path(Sys.getenv("REPLICATION_ROOT", unset = here::here()), "config", "paths.R"))
-## Set Path
-# here::i_am() removed: the package root comes from config/paths.R
-## Packages
-pacman::p_load(here,data.table,tidyverse,patchwork,haven,isoband)
+source(here::here("code", "R", "setup.R"))
+library(patchwork)
+library(isoband)
 
 # ---- Load data ----
 DT <- read_dta(file.path(ESTIMATES, "MRT_emp_fish_5-95.dta"))

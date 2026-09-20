@@ -1,26 +1,16 @@
 *-------------------------------------------------------------------------------
-* Filename:     34_panel_regional_emp_share.do
-* Purpose:      Two-period panel: regional employment share.
-* Inputs:       $RAW/employment-by-industry-community-and-year.csv
-* Outputs:      $DERIVED/regional_emp_share_panel_twoperiod.dta
-* Requires:     Stata 17+, config/paths.do already included by 00_master.do
-* Author:       Kim
-*               Ported for the replication package 2026; ONLY paths and this
-*               header were changed. Estimation logic is byte-for-byte original
-*               except where a line is marked RESTORED / ADDED.
+* 34_panel_regional_emp_share.do: Two-period panel: regional employment share.
+* Inputs:  $RAW/employment-by-industry-community-and-year.csv
+* Outputs: $DERIVED/regional_emp_share_panel_twoperiod.dta
 *-------------------------------------------------------------------------------
 version 17
 set more off
 
-********************** Broader Share of employment************
-******************* Panel structure two period **************************
-**************************************************************
-
-
+* Broader Share of employment
+* Panel structure two period
 
 clear
 set more off
-* NOTE: original `global inpath ...` removed; paths come from config/paths.do
 
 * Load the employment data
 insheet using "$RAW/employment-by-industry-community-and-year.csv", comma clear

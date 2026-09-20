@@ -3,13 +3,22 @@ data/derived/*
 !data/derived/.gitkeep
 logs/*
 !logs/.gitkeep
-output/tables/*
-!output/tables/.gitkeep
 
-# The figures and saved estimates ARE tracked, so anyone can see what the
+# Figures, tables and saved estimates ARE tracked, so anyone can see what the
 # package produces without running it first.
 
 Rplots.pdf
 .Rhistory
 .RData
 .DS_Store
+
+# LaTeX build files
+paper/*.aux
+paper/*.bbl
+paper/*.blg
+paper/*.fdb_latexmk
+paper/*.fls
+paper/*.log
+paper/*.out
+paper/*.synctex.gz
+paper/*.pdf
