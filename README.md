@@ -74,8 +74,8 @@ The manuscript in `paper/` reads its figures from `output/figures/` and its tabl
 
 ## 5. Notes
 
-- The `keep if` in `20_estimate_frontiers.do` leaves 179 rows; `sfcross` drops those with a missing regressor, leaving 177 (asserted). Variables are normalized on the 179 rows, the frontiers are estimated once, and `estimation_sample.dta` (the 177 communities, with the normalized variables) is what every later script and all figures use, including the percentiles of diversification.
-- All MRT quantities (Tables S2 and S5, the elasticities, the cross-partial, and Figs. 5 and 6) are computed by the same analytic formula from the spec 3 estimates, with all other log regressors at zero, so Table S5 is the middle row and column of the Fig. 6b grid.
+- The `keep if` in `20_estimate_frontiers.do` leaves 179 rows; `sfcross` drops those with a missing regressor, leaving 177 rows. Variables are normalized on the 179 rows, the frontiers are estimated once, and `estimation_sample.dta` (the 177 communities, with the normalized variables) is what every later script and all figures use.
+- All MRT quantities (Tables S2 and S5, the elasticities, the cross-partial, and Figs. 5 and 6) are computed by the same analytic formula from the specification 3 estimates, with all other log regressors at zero (i.e., their mean).
 - Table S6 uses MCMC. `set.seed(123)` is set, but JAGS is not bit-identical across platforms; posterior means and SDs should agree to the second or third decimal.
 - `logs/` holds `00_master.log` and one log per R script.
 
