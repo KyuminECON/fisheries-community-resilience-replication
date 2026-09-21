@@ -56,7 +56,7 @@ Study period 2000–2016; estimation sample 177 communities.
 | Fig. 6 | `code/R/17_fig6_mrt_substitution.R` |
 | Fig. S1 | `code/R/10_figS1_diversification_trend.R` |
 
-The manuscript in `paper/` reads its figures from `output/figures/` and its tables from `output/tables/`, so run the package before compiling it.
+Figures are written to `output/figures/` and LaTeX table bodies to `output/tables/`, ready to be included in the manuscript.
 
 ## 4. Structure
 

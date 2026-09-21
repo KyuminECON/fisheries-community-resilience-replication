@@ -16,6 +16,9 @@ Rplots.pdf
 .RData
 .DS_Store
 
+# The manuscript is kept locally but is not part of the public package.
+paper/
+
 # LaTeX build files
 paper/*.aux
 paper/*.bbl
